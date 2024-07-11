@@ -11,6 +11,7 @@
 
             foreach (var rota in rotas)
             {
+                Console.Write($"\n[{rota.Metodo}] {rota.UrlCrua}... ");
                 rota.FazRequisicao(app);
                 if (rota.RespostaCodigo is null) Do.Kill("Erro. Rota não retornou resposta.");
 

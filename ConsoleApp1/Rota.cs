@@ -39,16 +39,19 @@ namespace RouteChecker
             {
                 if (v.Value) // variável que precisa ser inserida
                 {
+                    var (left, top) = Console.GetCursorPosition();
+                    Console.SetCursorPosition(0, top - 1);
+                    var corTexto = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Blue;
                     Console.Write($"Insira o valor da variável '{v.Key}': ");
+                    Console.ForegroundColor = corTexto;
                     string? resposta = Console.ReadLine();
+                    Console.SetCursorPosition(left, top);
                     parser.Variaveis[v.Key] = resposta!;
                     Url = SubstituiVariaveis(UrlCrua!, parser.Variaveis, variaveisDaRota);
                 }
             }
 
-            // TODO(Andre - 11/07/2024): Colocar a responsabilidade de imprimir para quem chama esse método
-            // O desafio é que a Url ainda não foi substituída pelas variáveis antes de chamar esse método
-            Console.Write($"\n[{Metodo}] {Url}... ");
             HttpResponseMessage response = client.SendAsync(request).Result;
             RespostaCodigo = (int)response.StatusCode;
             RespostaBody = IdentaJson(response.Content.ReadAsStringAsync().Result);
