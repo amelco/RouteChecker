@@ -39,7 +39,7 @@ namespace RouteChecker
             {
                 if (v.Value) // variável que precisa ser inserida
                 {
-                    Console.Write($"Insira o valor de {v.Key}: ");
+                    Console.Write($"Insira o valor da variável '{v.Key}': ");
                     string? resposta = Console.ReadLine();
                     parser.Variaveis[v.Key] = resposta!;
                     Url = SubstituiVariaveis(UrlCrua!, parser.Variaveis, variaveisDaRota);

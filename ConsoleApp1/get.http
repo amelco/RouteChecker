@@ -15,6 +15,6 @@ POST {{baseUrl}}/motorista/login
 ###
 @emailAtendente=andre.bezerra@localiza.com
 @novoCaso=45604147-fb4d-44a9-71cc-08dca0119de3
-@teste=?Digite o valor de teste?
+@teste=?
 POST {{baseUrl}}/casos/alterar-responsavel/{{novoCaso}}?email={{emailAtendente}}&teste={{teste}}
 Authorization: {{token}}

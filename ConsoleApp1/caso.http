@@ -61,7 +61,7 @@ Content-Type: application/json
 
 ###
 // !!! COPIE o id do caso criado aqui
-@novoCaso=?Digite o id do caso criado?
+@novoCaso=?
 
 POST {{baseUrl}}/casos/alterar-responsavel/{{novoCaso}}?email={{emailAtendente}}
 Authorization: {{token}}
