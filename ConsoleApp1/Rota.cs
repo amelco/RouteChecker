@@ -12,17 +12,19 @@ namespace RouteChecker
         public int? RespostaCodigo { get; set; }
         public string? RespostaBody { get; set; }
 
-        public void FazRequisicao(Dictionary<string, string> vars)
+        public void FazRequisicao(Parser parser)
         {
+            Dictionary<string, bool> variaveisDaRota = new();
+
             if (UrlCrua is null) Do.Kill("Erro. URL da rota não definida.");
-            Url = SubstituiVariaveis(UrlCrua!, vars);
+            Url = SubstituiVariaveis(UrlCrua!, parser.Variaveis, variaveisDaRota);
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(Metodo!), Url);
 
             foreach (var header in Header)
             {
                 if (header.Key.ToLower() == "content-type") continue; // Content-Type é definido no Body
-                string value = SubstituiVariaveis(header.Value, vars);
+                string value = SubstituiVariaveis(header.Value, parser.Variaveis, null);
                 request.Headers.Add(header.Key, value);
             }
 
@@ -32,18 +34,16 @@ namespace RouteChecker
                 request.Content = new StringContent(Body, Encoding.UTF8, "application/json");
             }
 
-            // TODO(Andre - 11/07/2024): não perguntar novamente se a variável for a mesma nas rotas seguintes
-            int promptIndex = Url.IndexOf("=?"); // variavel de query
-            if (promptIndex == -1) promptIndex = Url.IndexOf("/?"); // variavel de rota
-            if (promptIndex >= 0)
+            // pergunta por variavel que deve ser inserida antes da requisição
+            foreach (var v in variaveisDaRota)
             {
-                int endPromptIndex = Url.IndexOf("?", promptIndex + 2);
-                string prompt = Url.Substring(promptIndex + 2, endPromptIndex - promptIndex - 2);
-                Console.Write(prompt + " ");
-                string? resposta = Console.ReadLine();
-                if (resposta is null) Do.Kill($"Erro. Valor precisa ser inserido.");
-                string nova_rota = Url.Substring(0, promptIndex + 1) + resposta + Url.Substring(promptIndex + 2 + prompt.Length + 1);
-                Url = nova_rota;
+                if (v.Value) // variável que precisa ser inserida
+                {
+                    Console.Write($"Insira o valor de {v.Key}: ");
+                    string? resposta = Console.ReadLine();
+                    parser.Variaveis[v.Key] = resposta!;
+                    Url = SubstituiVariaveis(UrlCrua!, parser.Variaveis, variaveisDaRota);
+                }
             }
 
             // TODO(Andre - 11/07/2024): Colocar a responsabilidade de imprimir para quem chama esse método
@@ -54,7 +54,7 @@ namespace RouteChecker
             RespostaBody = IdentaJson(response.Content.ReadAsStringAsync().Result);
         }
 
-        private static string SubstituiVariaveis(string linha, Dictionary<string, string> vars)
+        private static string SubstituiVariaveis(string linha, Dictionary<string, string> vars, Dictionary<string, bool>? rotaVars)
         {
             string nova_linha = "";
             for (int i = 0; i < linha.Length; i++)
@@ -83,6 +83,13 @@ namespace RouteChecker
                     else
                         vars.Add(nome_var, valor_var!);
                     i++;
+                    if (rotaVars is not null)
+                    {
+                        if (rotaVars.ContainsKey(nome_var))
+                            rotaVars[nome_var] = valor_var![0] == '?';
+                        else
+                            rotaVars.Add(nome_var, valor_var![0] == '?');
+                    }
                 }
                 if (i >= linha.Length) break;
                 nova_linha += linha[i];

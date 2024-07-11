@@ -37,10 +37,6 @@
                     continue;
                 }
 
-                // TODO(Andre): Essa implementacao nao esta considerando o delimitador '###' de fim de rota.
-                // Da mesma forma, não está considerando o corpo de resposta e seus delimitadores '{' e '}'.
-                // Uma implementacao que tente desconsidera-los, como essa, pode se tornar mais complicada de implementar e entender.
-                // TODO(Andre): Implementar o parsing do corpo da requisicao
                 Rota rota = new Rota();
                 if (linhas[i].StartsWith("GET") || linhas[i].StartsWith("POST") || linhas[i].StartsWith("PUT") || linhas[i].StartsWith("DELETE"))
                 {
