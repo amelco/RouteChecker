@@ -6,7 +6,7 @@
         {
             Args argumentos = new(args);
 
-            Parser app = new(argumentos.CaminhoArquivo);
+            Parser app = new(argumentos);
             var rotas = app.Parse();
 
             foreach (var rota in rotas)

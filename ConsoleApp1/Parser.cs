@@ -5,16 +5,16 @@
         private string conteudo = "";
         public Dictionary<string, string> Variaveis { get; set; } = new();
 
-        public Parser(string caminhoArquivo)
+        public Parser(Args argumentos)
         {
             try
             {
-                conteudo = File.ReadAllText(caminhoArquivo);
+                conteudo = File.ReadAllText(argumentos.CaminhoArquivo);
                 if (string.IsNullOrEmpty(conteudo)) Do.Kill("Arquivo vazio. Saindo da aplicação...");
             }
             catch (Exception e)
             {
-                Do.Kill("Erro ao abrir arquivo '" + caminhoArquivo + "'. " + e.Message);
+                Do.Kill("Erro ao abrir arquivo '" + argumentos.CaminhoArquivo + "'. " + e.Message);
             }
         }
 
