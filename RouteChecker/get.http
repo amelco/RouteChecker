@@ -1,0 +1,7 @@
+@baseUrl=https://api.restful-api.dev
+
+GET {{baseUrl}}/objects
+
+@id=?
+GET {{baseUrl}}/objects/{{id}}
+

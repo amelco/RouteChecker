@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "ConsoleApp1": {
-      "commandName": "Project",
-      "commandLineArgs": "caso.http",
-      "workingDirectory": "C:\\andre\\projects\\route-check\\ConsoleApp1\\ConsoleApp1"
-    }
-  }
-}
